@@ -1,0 +1,179 @@
+以下が最新のソース一覧
+----- C:\workspace\NoriMonsterGrow\frontend\src\App.jsx ----- 
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* 他のルートを追加 */}
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+   
+----- C:\workspace\NoriMonsterGrow\frontend\src\pages\Home.jsx ----- 
+import React from 'react';
+import '../css/Home.css'; // スタイルを追加する場合に備えて
+
+const Home = () => {
+  const player = {
+    name: 'プレイヤー名',
+    level: 5,
+    experience: 1200,
+  };
+
+  const monsters = [
+    { name: 'モンスターA', level: 3, hp: 50 },
+    { name: 'モンスターB', level: 4, hp: 40 },
+  ];
+
+  return (
+    <div className="container">
+      <header className="py-4 text-center">
+        <h1>NoriMonsterGrow</h1>
+        <h2>{player.name}</h2>
+        <p>レベル: {player.level}</p>
+        <div className="progress" style={{ height: '20px' }}>
+          <div
+            className="progress-bar"
+            role="progressbar"
+            style={{ width: `${(player.experience / 2000) * 100}%` }}
+            aria-valuenow={player.experience}
+            aria-valuemin="0"
+            aria-valuemax="2000"
+          >
+            {player.experience} / 2000
+          </div>
+        </div>
+      </header>
+
+      <div className="row my-4">
+        {monsters.map((monster, index) => (
+          <div className="col-md-4" key={index}>
+            <div className="card mb-4">
+              <img
+                src={`https://via.placeholder.com/150?text=${monster.name}`}
+                className="card-img-top"
+                alt={monster.name}
+              />
+              <div className="card-body">
+                <h5 className="card-title">{monster.name}</h5>
+                <p className="card-text">レベル: {monster.level}</p>
+                <p className="card-text">HP: {monster.hp}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <nav className="mt-4">
+        <h4>メインメニュー</h4>
+        <ul className="list-group">
+          <li className="list-group-item">
+            <a href="/育成" className="nav-link">モンスター育成</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/カスタマイズ" className="nav-link">カスタマイズ</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/バトル" className="nav-link">バトル</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/特訓" className="nav-link">特訓</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/アルバム" className="nav-link">アルバム</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/図鑑" className="nav-link">図鑑</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/イベント" className="nav-link">イベント</a>
+          </li>
+          <li className="list-group-item">
+            <a href="/設定" className="nav-link">設定</a>
+          </li>
+        </ul>
+      </nav>
+
+      <footer className="text-center mt-4">
+        <p>© 2024 NoriMonsterGrow. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+};
+
+export default Home;
+   
+----- C:\workspace\NoriMonsterGrow\frontend\src\App.css ----- 
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\frontend\src\index.css ----- 
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+   
+----- C:\workspace\NoriMonsterGrow\frontend\src\css\Home.css ----- 
+.container {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  text-align: center;
+}   
