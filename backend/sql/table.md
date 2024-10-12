@@ -9,3 +9,20 @@
 | **t_monster_growth**    | モンスター育成記録     | モンスターの育成履歴を管理。育成タイプや結果を記録。                     |
 | **t_monster_battle**    | モンスターバトル記録   | モンスター同士のバトル履歴を管理。バトル結果や参加モンスター情報を記録。 |
 | **t_training_record**   | 特訓記録               | 特訓ミニゲームの履歴を管理。参加モンスターや得られたスキルを記録。       |
+
+
+### モンスターイメージマスタに256匹のモンスター画像を挿入
+```
+-- モンスターイメージマスタに256匹のモンスター画像を挿入
+BEGIN
+    FOR x IN 0..15 LOOP
+        FOR y IN 0..15 LOOP
+            INSERT INTO M_MONSTER_IMG (MONSTER_IMG_ID, IMG_FILE_NAME, PIXEL_X, PIXEL_Y, CREATED_BY)
+            VALUES ((x * 16 + y + 1), 'monster.png', x * 64, y * 64, 'nori');
+        END LOOP;
+    END LOOP;
+END;
+/
+
+commit;
+```
