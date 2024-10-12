@@ -88,5 +88,5 @@ NoriMonsterGrow/
 
 ### 技術面
 - フロントエンドはReactを使用し、モンスターやバトルシーンは簡単なアニメーションを追加。
-- バックエンドはSpring BootやPostgreSQLを使って、データ管理や記録を保存。
+- バックエンドはSpring Boot、Oracleを使って、データ管理や記録を保存。
 

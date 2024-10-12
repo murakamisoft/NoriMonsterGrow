@@ -1,0 +1,196 @@
+﻿# A5:ER FORMAT:18
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.19.2 Copyright © 1997 - 2024 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+Page=Main
+PageInfo="Main",2,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewModePageIndividually=1
+ViewMode=2
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=6
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+BugFixEntityWidth=1
+
+[Entity]
+PName=M_MONSTER
+LName=モンスターの基本情報を管理。プレイヤーID、タイプ、属性、レベルなど。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=100
+Top=400
+Field="モンスターID","MONSTER_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75979\Q.nextval","",$FFFFFFFF,""
+Field="プレイヤーID","PLAYER_ID","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="モンスタータイプID","MONSTER_TYPE_ID","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="モンスター属性ID","MONSTER_ATTRIBUTE_ID","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="レベル","LV","NUMBER",,,"1","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                     -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",100,400
+ZOrder=-1
+
+[Entity]
+PName=M_MONSTER_ATTRIBUTE
+LName=モンスターの属性を管理。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=350
+Top=50
+Field="属性ID","ATTRIBUTE_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75985\Q.nextval","",$FFFFFFFF,""
+Field="属性名","ATTRIBUTE_NAME","VARCHAR2(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                     -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",350,50
+ZOrder=-2
+
+[Entity]
+PName=M_MONSTER_TYPE
+LName=モンスターのタイプを管理。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=650
+Top=50
+Field="タイプID","TYPE_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75982\Q.nextval","",$FFFFFFFF,""
+Field="タイプ名","TYPE_NAME","VARCHAR2(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                     -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",650,50
+ZOrder=-3
+
+[Entity]
+PName=M_PLAYER
+LName=プレイヤーの基本情報を管理。名前、レベル、経験値、所持モンスターなど。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=950
+Top=50
+Field="プレイヤーID","PLAYER_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75976\Q.nextval","",$FFFFFFFF,""
+Field="名前","NAME","VARCHAR2(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="レベル","LV","NUMBER",,,"1","",$FFFFFFFF,""
+Field="経験値","EXPERIENCE","NUMBER",,,"0","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                       -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",950,50
+ZOrder=-4
+
+[Entity]
+PName=T_MONSTER_GROWTH
+LName=モンスターの育成履歴を管理。育成タイプや結果を記録。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1550
+Top=50
+Field="育成ID","GROWTH_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75988\Q.nextval","",$FFFFFFFF,""
+Field="モンスターID","MONSTER_ID","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="育成タイプ","GROWTH_TYPE","VARCHAR2(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="結果","RESULT","VARCHAR2(200)","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                   -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",1550,50
+ZOrder=-6
+
+[Entity]
+PName=T_MONSTER_BATTLE
+LName=モンスター同士のバトル履歴を管理。バトル結果や参加モンスター情報を記録。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1250
+Top=50
+Field="バトルID","BATTLE_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75991\Q.nextval","",$FFFFFFFF,""
+Field="モンスター1 ID","MONSTER_ID_1","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="モンスター2 ID","MONSTER_ID_2","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="バトル結果","RESULT","VARCHAR2(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                  -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",1250,50
+ZOrder=-5
+
+[Entity]
+PName=T_TRAINING_RECORD
+LName=モンスターの特訓履歴を管理。特訓タイプや結果を記録。
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1850
+Top=50
+Field="特訓ID","TRAINING_ID","NUMBER","NOT NULL",0,"\QORACLE_USER\Q.\QISEQ$$_75994\Q.nextval","",$FFFFFFFF,""
+Field="モンスターID","MONSTER_ID","NUMBER","NOT NULL",,"","",$FFFFFFFF,""
+Field="特訓タイプ","TRAINING_TYPE","VARCHAR2(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="結果","RESULT","VARCHAR2(200)","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成者","CREATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="作成日時","CREATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP","",$FFFFFFFF,""
+Field="更新者","UPDATED_BY","VARCHAR2(100)",,,"","",$FFFFFFFF,""
+Field="更新日時","UPDATED_AT","TIMESTAMP(6)",,,"CURRENT_TIMESTAMP                   -- 更新日時","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",1850,50
+ZOrder=-7
