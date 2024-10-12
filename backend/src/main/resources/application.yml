@@ -6,7 +6,8 @@ spring:
     username: oracle_user
     password: pass
     driver-class-name: oracle.jdbc.OracleDriver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+
+mybatis:
+  type-aliases-package: com.monstergrow.model
+  mapper-locations: classpath:com/monstergrow/mapper/*.xml
+

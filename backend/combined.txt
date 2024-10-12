@@ -14,6 +14,590 @@ public class NoriMonsterGrowApplication {
 
 }
    
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\controller\MonsterController.java ----- 
+package com.monstergrow.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import com.monstergrow.model.Monster;
+import com.monstergrow.service.MonsterService;
+
+@RestController
+@RequestMapping("/api/monsters")
+public class MonsterController {
+
+  @Autowired
+  private MonsterService monsterService;
+
+  // モンスターの一覧を取得する
+  @GetMapping
+  public List<Monster> getAllMonsters() {
+    return monsterService.getAllMonsters();
+  }
+
+  // 指定したモンスターの詳細情報を取得する
+  @GetMapping("/{monsterId}")
+  public ResponseEntity<Monster> getMonsterById(@PathVariable Long monsterId) {
+    Monster monster = monsterService.getMonsterById(monsterId);
+    return ResponseEntity.ok(monster);
+  }
+
+  // 新しいモンスターを作成する
+  @PostMapping
+  public ResponseEntity<Monster> createMonster(@RequestBody Monster monster) {
+    Monster createdMonster = monsterService.createMonster(monster);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdMonster);
+  }
+
+  // 指定したモンスターの情報を更新する
+  @PutMapping("/{monsterId}")
+  public ResponseEntity<Monster> updateMonster(@PathVariable Long monsterId, @RequestBody Monster monsterDetails) {
+    Monster updatedMonster = monsterService.updateMonster(monsterId, monsterDetails);
+    return ResponseEntity.ok(updatedMonster);
+  }
+
+  // 指定したモンスターを削除する
+  @DeleteMapping("/{monsterId}")
+  public ResponseEntity<Void> deleteMonster(@PathVariable Long monsterId) {
+    monsterService.deleteMonster(monsterId);
+    return ResponseEntity.noContent().build();
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\controller\PlayerController.java ----- 
+package com.monstergrow.controller;
+
+import com.monstergrow.model.Player;
+import com.monstergrow.service.PlayerService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/players")
+public class PlayerController {
+
+  private final PlayerService playerService;
+
+  public PlayerController(PlayerService playerService) {
+    this.playerService = playerService;
+  }
+
+  // プレイヤーの一覧を取得
+  @GetMapping
+  public ResponseEntity<List<Player>> getAllPlayers() {
+    List<Player> players = playerService.getAllPlayers();
+    return ResponseEntity.ok(players);
+  }
+
+  // 指定したプレイヤーの詳細情報を取得
+  @GetMapping("/{playerId}")
+  public ResponseEntity<Player> getPlayerById(@PathVariable Long playerId) {
+    Player player = playerService.getPlayerById(playerId);
+    return player != null ? ResponseEntity.ok(player) : ResponseEntity.notFound().build();
+  }
+
+  // 新しいプレイヤーを作成
+  @PostMapping
+  public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+    Player createdPlayer = playerService.createPlayer(player);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdPlayer);
+  }
+
+  // 指定したプレイヤーの情報を更新
+  @PutMapping("/{playerId}")
+  public ResponseEntity<Player> updatePlayer(@PathVariable Long playerId, @RequestBody Player player) {
+    Player updatedPlayer = playerService.updatePlayer(playerId, player);
+    return ResponseEntity.ok(updatedPlayer);
+  }
+
+  // 指定したプレイヤーを削除
+  @DeleteMapping("/{playerId}")
+  public ResponseEntity<Void> deletePlayer(@PathVariable Long playerId) {
+    playerService.deletePlayer(playerId);
+    return ResponseEntity.noContent().build();
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\mapper\MonsterBattleMapper.java ----- 
+package com.monstergrow.mapper;
+
+import com.monstergrow.model.MonsterBattle;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface MonsterBattleMapper {
+
+  @Select("SELECT * FROM T_MONSTER_BATTLE")
+  List<MonsterBattle> getAllMonsterBattles();
+
+  @Select("SELECT * FROM T_MONSTER_BATTLE WHERE MONSTER_BATTLE_ID = #{monsterBattleId}")
+  MonsterBattle getMonsterBattleById(Long monsterBattleId);
+
+  @Insert("INSERT INTO T_MONSTER_BATTLE (MONSTER_BATTLE_ID, RESULT, CREATED_BY, UPDATED_BY) " +
+      "VALUES (#{monsterBattleId}, #{result}, #{createdBy}, #{updatedBy})")
+  void insertMonsterBattle(MonsterBattle monsterBattle);
+
+  @Update("UPDATE T_MONSTER_BATTLE SET RESULT = #{result}, UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE MONSTER_BATTLE_ID = #{monsterBattleId}")
+  void updateMonsterBattle(MonsterBattle monsterBattle);
+
+  @Delete("DELETE FROM T_MONSTER_BATTLE WHERE MONSTER_BATTLE_ID = #{monsterBattleId}")
+  void deleteMonsterBattle(Long monsterBattleId);
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\mapper\MonsterImgMapper.java ----- 
+package com.monstergrow.mapper;
+
+import com.monstergrow.model.MonsterImg;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface MonsterImgMapper {
+
+  @Select("SELECT * FROM M_MONSTER_IMG")
+  List<MonsterImg> getAllMonsterImages();
+
+  @Select("SELECT * FROM M_MONSTER_IMG WHERE MONSTER_IMG_ID = #{monsterImgId}")
+  MonsterImg getMonsterImageById(Long monsterImgId);
+
+  @Insert("INSERT INTO M_MONSTER_IMG (MONSTER_IMG_ID, IMG_FILE_NAME, PIXEL_X, PIXEL_Y, CREATED_BY, UPDATED_BY) " +
+      "VALUES (#{monsterImgId}, #{imgFileName}, #{pixelX}, #{pixelY}, #{createdBy}, #{updatedBy})")
+  void insertMonsterImage(MonsterImg monsterImg);
+
+  @Update("UPDATE M_MONSTER_IMG SET IMG_FILE_NAME = #{imgFileName}, PIXEL_X = #{pixelX}, PIXEL_Y = #{pixelY}, " +
+      "UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE MONSTER_IMG_ID = #{monsterImgId}")
+  void updateMonsterImage(MonsterImg monsterImg);
+
+  @Delete("DELETE FROM M_MONSTER_IMG WHERE MONSTER_IMG_ID = #{monsterImgId}")
+  void deleteMonsterImage(Long monsterImgId);
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\mapper\MonsterMapper.java ----- 
+package com.monstergrow.mapper;
+
+import com.monstergrow.model.Monster;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface MonsterMapper {
+
+  @Select("SELECT * FROM M_MONSTER")
+  List<Monster> getAllMonsters();
+
+  @Select("SELECT * FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}")
+  Monster getMonsterById(Long monsterId);
+
+  @Select("SELECT * FROM M_MONSTER WHERE PLAYER_ID = #{playerId}")
+  List<Monster> getMonstersByPlayerId(Long playerId);
+
+  @Insert("INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, CREATED_BY, UPDATED_BY) "
+      +
+      "VALUES (#{monsterId}, #{playerId}, #{monsterTypeId}, #{monsterAttributeId}, #{monsterImgId}, #{monsterName}, #{createdBy}, #{updatedBy})")
+  void insertMonster(Monster monster);
+
+  @Update("UPDATE M_MONSTER SET PLAYER_ID = #{playerId}, MONSTER_TYPE_ID = #{monsterTypeId}, " +
+      "MONSTER_ATTRIBUTE_ID = #{monsterAttributeId}, MONSTER_IMG_ID = #{monsterImgId}, " +
+      "MONSTER_NAME = #{monsterName}, UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE MONSTER_ID = #{monsterId}")
+  void updateMonster(Monster monster);
+
+  @Delete("DELETE FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}")
+  void deleteMonster(Long monsterId);
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\mapper\PlayerMapper.java ----- 
+package com.monstergrow.mapper;
+
+import com.monstergrow.model.Player;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface PlayerMapper {
+
+  @Select("SELECT * FROM M_PLAYER")
+  List<Player> getAllPlayers();
+
+  @Select("SELECT * FROM M_PLAYER WHERE PLAYER_ID = #{playerId}")
+  Player getPlayerById(Long playerId);
+
+  @Insert("INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY, UPDATED_BY) " +
+      "VALUES (#{playerId}, #{playerName}, #{lv}, #{experience}, #{createdBy}, #{updatedBy})")
+  void insertPlayer(Player player);
+
+  @Update("UPDATE M_PLAYER SET PLAYER_NAME = #{playerName}, LV = #{lv}, EXPERIENCE = #{experience}, " +
+      "UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE PLAYER_ID = #{playerId}")
+  void updatePlayer(Player player);
+
+  @Delete("DELETE FROM M_PLAYER WHERE PLAYER_ID = #{playerId}")
+  void deletePlayer(Long playerId);
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\mapper\TrainingRecordMapper.java ----- 
+package com.monstergrow.mapper;
+
+import com.monstergrow.model.TrainingRecord;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
+
+@Mapper
+public interface TrainingRecordMapper {
+
+  @Select("SELECT * FROM T_TRAINING_RECORD")
+  List<TrainingRecord> getAllTrainingRecords();
+
+  @Select("SELECT * FROM T_TRAINING_RECORD WHERE TRAINING_ID = #{trainingId}")
+  TrainingRecord getTrainingRecordById(Long trainingId);
+
+  @Insert("INSERT INTO T_TRAINING_RECORD (TRAINING_ID, MONSTER_ID, TRAINING_TYPE, RESULT, CREATED_BY, UPDATED_BY) " +
+      "VALUES (#{trainingId}, #{monsterId}, #{trainingType}, #{result}, #{createdBy}, #{updatedBy})")
+  void insertTrainingRecord(TrainingRecord trainingRecord);
+
+  @Update("UPDATE T_TRAINING_RECORD SET MONSTER_ID = #{monsterId}, TRAINING_TYPE = #{trainingType}, " +
+      "RESULT = #{result}, UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE TRAINING_ID = #{trainingId}")
+  void updateTrainingRecord(TrainingRecord trainingRecord);
+
+  @Delete("DELETE FROM T_TRAINING_RECORD WHERE TRAINING_ID = #{trainingId}")
+  void deleteTrainingRecord(Long trainingId);
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\model\Monster.java ----- 
+package com.monstergrow.model;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Monster {
+  private Long monsterId;
+  private Long playerId;
+  private Long monsterTypeId;
+  private Long monsterAttributeId;
+  private Long monsterImgId;
+  private String monsterName;
+  private Integer lv;
+  private String createdBy;
+  private LocalDateTime createdAt;
+  private String updatedBy;
+  private LocalDateTime updatedAt;
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\model\MonsterBattle.java ----- 
+package com.monstergrow.model;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MonsterBattle {
+  private Long monsterBattleId;
+  private String result;
+  private String createdBy;
+  private LocalDateTime createdAt;
+  private String updatedBy;
+  private LocalDateTime updatedAt;
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\model\MonsterImg.java ----- 
+package com.monstergrow.model;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MonsterImg {
+  private Long monsterImgId;
+  private String imgFileName;
+  private Integer pixelX;
+  private Integer pixelY;
+  private String createdBy;
+  private LocalDateTime createdAt;
+  private String updatedBy;
+  private LocalDateTime updatedAt;
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\model\Player.java ----- 
+package com.monstergrow.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Id;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Player {
+  @Id
+  private Long playerId;
+  private String playerName;
+  private Integer lv;
+  private Integer experience;
+  private String createdBy;
+  private LocalDateTime createdAt;
+  private String updatedBy;
+  private LocalDateTime updatedAt;
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\model\TrainingRecord.java ----- 
+package com.monstergrow.model;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TrainingRecord {
+  private Long trainingId;
+  private Long monsterId;
+  private String trainingType;
+  private String result;
+  private String createdBy;
+  private LocalDateTime createdAt;
+  private String updatedBy;
+  private LocalDateTime updatedAt;
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\repository\MonsterImageRepository.java ----- 
+package com.monstergrow.repository;
+
+import com.monstergrow.mapper.MonsterImgMapper;
+import com.monstergrow.model.MonsterImg;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class MonsterImageRepository {
+
+  private final MonsterImgMapper monsterImageMapper;
+
+  public MonsterImageRepository(MonsterImgMapper monsterImageMapper) {
+    this.monsterImageMapper = monsterImageMapper;
+  }
+
+  public void save(MonsterImg monsterImage) {
+    monsterImageMapper.insertMonsterImage(monsterImage);
+  }
+
+  public MonsterImg findById(Long monsterImageId) {
+    return monsterImageMapper.getMonsterImageById(monsterImageId);
+  }
+
+  public List<MonsterImg> findAll() {
+    return monsterImageMapper.getAllMonsterImages();
+  }
+
+  public void update(MonsterImg monsterImage) {
+    monsterImageMapper.updateMonsterImage(monsterImage);
+  }
+
+  public void delete(Long monsterImageId) {
+    monsterImageMapper.deleteMonsterImage(monsterImageId);
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\repository\MonsterRepository.java ----- 
+package com.monstergrow.repository;
+
+import com.monstergrow.mapper.MonsterMapper;
+import com.monstergrow.model.Monster;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public class MonsterRepository {
+
+  private final MonsterMapper monsterMapper;
+
+  public MonsterRepository(MonsterMapper monsterMapper) {
+    this.monsterMapper = monsterMapper;
+  }
+
+  public List<Monster> findAll() {
+    return monsterMapper.getAllMonsters();
+  }
+
+  public void save(Monster monster) {
+    monsterMapper.insertMonster(monster);
+  }
+
+  public Monster findById(Long monsterId) {
+    return monsterMapper.getMonsterById(monsterId);
+  }
+
+  public List<Monster> findByPlayerId(Long playerId) {
+    return monsterMapper.getMonstersByPlayerId(playerId);
+  }
+
+  public void update(Monster monster) {
+    monsterMapper.updateMonster(monster);
+  }
+
+  public void delete(Long monsterId) {
+    monsterMapper.deleteMonster(monsterId);
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\repository\PlayerRepository.java ----- 
+package com.monstergrow.repository;
+
+import com.monstergrow.mapper.PlayerMapper;
+import com.monstergrow.model.Player;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public class PlayerRepository {
+
+  private final PlayerMapper playerMapper;
+
+  public PlayerRepository(PlayerMapper playerMapper) {
+    this.playerMapper = playerMapper;
+  }
+
+  public void save(Player player) {
+    playerMapper.insertPlayer(player);
+  }
+
+  public Player findById(Long playerId) {
+    return playerMapper.getPlayerById(playerId);
+  }
+
+  public List<Player> findAll() {
+    return playerMapper.getAllPlayers();
+  }
+
+  public void update(Player player) {
+    playerMapper.updatePlayer(player);
+  }
+
+  public void delete(Long playerId) {
+    playerMapper.deletePlayer(playerId);
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\service\MonsterService.java ----- 
+package com.monstergrow.service;
+
+import com.monstergrow.model.Monster;
+import com.monstergrow.repository.MonsterRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class MonsterService {
+
+  private final MonsterRepository monsterRepository;
+
+  public MonsterService(MonsterRepository monsterRepository) {
+    this.monsterRepository = monsterRepository;
+  }
+
+  public List<Monster> getAllMonsters() {
+    return monsterRepository.findAll();
+  }
+
+  public Monster getMonsterById(Long monsterId) {
+    return monsterRepository.findById(monsterId);
+  }
+
+  public Monster createMonster(Monster monster) {
+    monsterRepository.save(monster);
+    return monster;
+  }
+
+  public Monster updateMonster(Long monsterId, Monster monster) {
+    monster.setMonsterId(monsterId);
+    monsterRepository.update(monster);
+    return monster;
+  }
+
+  public void deleteMonster(Long monsterId) {
+    monsterRepository.delete(monsterId);
+  }
+}
+   
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\service\PlayerService.java ----- 
+package com.monstergrow.service;
+
+import com.monstergrow.model.Player;
+import com.monstergrow.repository.PlayerRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class PlayerService {
+
+  private final PlayerRepository playerRepository;
+
+  public PlayerService(PlayerRepository playerRepository) {
+    this.playerRepository = playerRepository;
+  }
+
+  public List<Player> getAllPlayers() {
+    return playerRepository.findAll();
+  }
+
+  public Player getPlayerById(Long playerId) {
+    return playerRepository.findById(playerId);
+  }
+
+  public Player createPlayer(Player player) {
+    playerRepository.save(player);
+    return player;
+  }
+
+  public Player updatePlayer(Long playerId, Player player) {
+    player.setPlayerId(playerId);
+    playerRepository.update(player);
+    return player;
+  }
+
+  public void deletePlayer(Long playerId) {
+    playerRepository.delete(playerId);
+  }
+}
+   
 ----- C:\workspace\NoriMonsterGrow\backend\src\test\java\com\monstergrow\NoriMonsterGrowApplicationTests.java ----- 
 package com.monstergrow;
 

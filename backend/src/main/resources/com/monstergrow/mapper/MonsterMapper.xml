@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.monstergrow.mapper.MonsterMapper">
+
+    <resultMap id="MonsterResultMap" type="com.monstergrow.model.Monster">
+        <result property="monsterId" column="monster_id"/>
+        <result property="playerId" column="player_id"/>
+        <result property="monsterTypeId" column="monster_type_id"/>
+        <result property="monsterAttributeId" column="monster_attribute_id"/>
+        <result property="monsterImgId" column="monster_img_id"/>
+        <result property="monsterName" column="monster_name"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getAllMonsters" resultMap="MonsterResultMap">
+        SELECT * FROM M_MONSTER
+    </select>
+
+    <select id="getMonsterById" parameterType="Long" resultMap="MonsterResultMap">
+        SELECT * FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}
+    </select>
+
+    <select id="getMonstersByPlayerId" parameterType="Long" resultMap="MonsterResultMap">
+        SELECT * FROM M_MONSTER WHERE PLAYER_ID = #{playerId}
+    </select>
+
+    <insert id="insertMonster" parameterType="com.monstergrow.model.Monster">
+        INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, CREATED_BY, UPDATED_BY) 
+        VALUES (#{monsterId}, #{playerId}, #{monsterTypeId}, #{monsterAttributeId}, #{monsterImgId}, #{monsterName}, #{createdBy}, #{updatedBy})
+    </insert>
+
+    <update id="updateMonster" parameterType="com.monstergrow.model.Monster">
+        UPDATE M_MONSTER 
+        SET PLAYER_ID = #{playerId}, MONSTER_TYPE_ID = #{monsterTypeId}, 
+            MONSTER_ATTRIBUTE_ID = #{monsterAttributeId}, MONSTER_IMG_ID = #{monsterImgId}, 
+            MONSTER_NAME = #{monsterName}, UPDATED_BY = #{updatedBy}, 
+            UPDATED_AT = CURRENT_TIMESTAMP 
+        WHERE MONSTER_ID = #{monsterId}
+    </update>
+
+    <delete id="deleteMonster">
+        DELETE FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.monstergrow.mapper.PlayerMapper">
+
+    <resultMap id="PlayerResultMap" type="com.monstergrow.model.Player">
+        <result property="playerId" column="player_id"/>
+        <result property="playerName" column="player_name"/>
+        <result property="lv" column="lv"/>
+        <result property="experience" column="experience"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getAllPlayers" resultMap="PlayerResultMap">
+        SELECT * FROM M_PLAYER
+    </select>
+
+    <select id="getPlayerById" parameterType="Long" resultMap="PlayerResultMap">
+        SELECT * FROM M_PLAYER WHERE PLAYER_ID = #{playerId}
+    </select>
+
+    <insert id="insertPlayer" parameterType="com.monstergrow.model.Player">
+        INSERT INTO M_PLAYER (PLAYER_NAME, LV, EXPERIENCE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT) 
+        VALUES (#{playerName}, #{lv}, #{experience}, #{createdBy}, #{createdAt}, #{updatedBy}, #{updatedAt})
+    </insert>
+
+    <update id="updatePlayer" parameterType="com.monstergrow.model.Player">
+        UPDATE M_PLAYER 
+        SET PLAYER_NAME=#{playerName}, LV=#{lv}, EXPERIENCE=#{experience}, 
+            UPDATED_BY=#{updatedBy}, UPDATED_AT=#{updatedAt} 
+        WHERE PLAYER_ID=#{playerId}
+    </update>
+
+    <delete id="deletePlayer">
+        DELETE FROM M_PLAYER WHERE PLAYER_ID=#{playerId}
+    </delete>
+
+</mapper>
