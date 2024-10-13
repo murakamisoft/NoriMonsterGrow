@@ -32,13 +32,6 @@ body {
   font-size: 1.1rem;
 }
 
-/* 他のスタイルにゲームフォントを適用 */
-h1,
-h2,
-p {
-  font-family: 'Press Start 2P', cursive;
-}
-
 /* モンスターグリッドのスタイル */
 .monster-grid {
   display: flex;

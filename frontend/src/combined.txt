@@ -5,6 +5,9 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Menu from './components/Menu';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons'; // faMonsterをfaDragonに置き換え
+import PlayerTraining from './pages/PlayerTraining';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,10 +18,14 @@ const App = () => {
 
   return (
     <Router>
-      <button onClick={toggleMenu} className="menu-button">メニュー</button>
+      <button onClick={toggleMenu} className="button">
+        <FontAwesomeIcon icon={faBars} /> Menu
+      </button>
+
       <Menu isOpen={isMenuOpen} onClose={toggleMenu} />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/training" element={<PlayerTraining playerId={1} />} />
         {/* 他のルートもここに追加 */}
       </Routes>
     </Router>
@@ -31,24 +38,31 @@ export default App;
 // src/components/Menu.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Menu.css'; // スタイル用のCSSファイルを作成
+import '../css/Menu.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faCog, faFistRaised } from '@fortawesome/free-solid-svg-icons';
 
+
+// Menu.jsx
 const Menu = ({ isOpen, onClose }) => {
   return (
     <div className={`menu ${isOpen ? 'open' : ''}`}>
       <button className="close-button" onClick={onClose}>×</button>
       <h2>Menu</h2>
       <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/monsters">Monster</Link></li>
-        <li><Link to="/settings">Setting</Link></li>
-        {/* 他のメニュー項目を追加 */}
+        <li><Link to="/"><FontAwesomeIcon icon={faHome} className="icon" /> Home</Link></li>
+        <li><Link to="/training"><FontAwesomeIcon icon={faFistRaised} className="icon" /> Training</Link></li>
+        <li><Link to="/settings"><FontAwesomeIcon icon={faCog} className="icon" /> Setting</Link></li>
       </ul>
     </div>
   );
 };
 
 export default Menu;
+
+
+
+
    
 ----- C:\Users\nori\workspace\NoriMonsterGrow\frontend\src\components\MonsterDisplay.jsx ----- 
 import React from 'react';
@@ -247,6 +261,78 @@ const PlayerMonsters = ({ playerId }) => {
 
 export default PlayerMonsters;
    
+----- C:\Users\nori\workspace\NoriMonsterGrow\frontend\src\pages\PlayerTraining.jsx ----- 
+// src/pages/PlayerTraining.jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const PlayerTraining = ({ playerId }) => {
+  const [monsters, setMonsters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [trainingMessage, setTrainingMessage] = useState(''); // メッセージ用の状態を追加
+
+  useEffect(() => {
+    const fetchMonsters = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/monsters/${playerId}/monsters`);
+        setMonsters(response.data);
+        console.log("response.data : " + JSON.stringify(response.data));
+      } catch (err) {
+        setError('モンスターの取得に失敗しました。');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMonsters();
+  }, [playerId]);
+
+  const handleTraining = (monster1, monster2) => {
+    // 特訓ロジックをここに追加
+    console.log(`${monster1.monsterName} と ${monster2.monsterName} が特訓中...`);
+
+    // 特訓の結果メッセージを設定
+    const message = `${monster1.monsterName} と ${monster2.monsterName} が特訓を行い、経験値を獲得しました！`;
+    setTrainingMessage(message);
+  };
+
+  if (loading) return <p>読み込み中...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div>
+      <h2 className="title">Training</h2>
+      <div className="monster-grid">
+        {monsters.length > 0 ? (
+          monsters.map((monster) => (
+            <div key={monster.monsterId} className="monster-item">
+              <img
+                src={`/img/monster/${monster.imgFileName}`}
+                alt={monster.monsterName}
+                className="monster-image"
+              />
+              <p>{monster.monsterName}</p>
+              <button class="button" onClick={() => handleTraining(monsters[0], monster)}>特訓開始</button> {/* 特訓ボタン */}
+            </div>
+          ))
+        ) : (
+          <p>特訓できるモンスターがいません。</p>
+        )}
+      </div>
+      {trainingMessage && ( // メッセージウィンドウを表示
+        <div className="message-container">
+          <div className="message-window">
+            <p>{trainingMessage}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PlayerTraining;
+   
 ----- C:\Users\nori\workspace\NoriMonsterGrow\frontend\src\App.css ----- 
 .App {
   text-align: center;
@@ -320,7 +406,101 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-   
+
+/* 他のスタイルにゲームフォントを適用 */
+h1,
+h2,
+p {
+  font-family: 'Press Start 2P', cursive;
+  color: yellow;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  /* ボタンの内側の余白 */
+  font-size: 16px;
+  /* 文字の大きさ */
+  font-weight: bold;
+  /* 文字を太くする */
+  color: white;
+  /* 文字の色 */
+  background: linear-gradient(45deg, #ff6b6b, #f7b32b);
+  /* グラデーション */
+  border: none;
+  /* ボーダーなし */
+  border-radius: 10px;
+  /* 角を丸める */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* 影を追加 */
+  cursor: pointer;
+  /* カーソルをポインターにする */
+  transition: transform 0.2s ease, background 0.3s ease;
+  /* アニメーション効果 */
+}
+
+.button:hover {
+  transform: scale(1.05);
+  /* ホバー時に少し大きくする */
+  background: linear-gradient(45deg, #f7b32b, #ff6b6b);
+  /* ホバー時の色を反転 */
+}
+
+.button:active {
+  transform: scale(0.95);
+  /* クリック時に少し小さくする */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* クリック時の影を少なくする */
+}
+
+/* アイコンのスタイル（オプション） */
+.button .icon {
+  margin-right: 8px;
+  /* アイコンと文字の間隔 */
+  font-size: 20px;
+  /* アイコンのサイズ */
+}
+
+
+.title {
+  text-align: center;
+  color: yellow;
+  /* メニューと同じ色 */
+  font-size: 2rem;
+  /* フォントサイズを調整 */
+  margin: 20px 0;
+  /* 上下のマージンを追加 */
+}
+
+/* src/styles.css */
+.message-window {
+  padding: 20px;
+  width: 600px;
+  /* 幅を固定 */
+  border: 2px solid yellow;
+  /* 枠線を黄色に設定 */
+  background-color: rgba(255, 255, 255, 0.1);
+  /* 半透明の白背景 */
+  color: black;
+  /* 文字色は黒 */
+  text-align: left;
+  /* 中央揃え */
+  border-radius: 10px;
+  /* 角を丸くする */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  /* 影を追加 */
+}
+
+/* メッセージウィンドウを囲むラッパー */
+.message-container {
+  display: flex;
+  justify-content: center;
+  /* 横に対して中央揃え */
+  margin-top: 20px;
+  /* モンスターグリッドとの間隔 */
+}   
 ----- C:\Users\nori\workspace\NoriMonsterGrow\frontend\src\css\Home.css ----- 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -354,13 +534,6 @@ body {
   box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
   color: #FFD700;
   font-size: 1.1rem;
-}
-
-/* 他のスタイルにゲームフォントを適用 */
-h1,
-h2,
-p {
-  font-family: 'Press Start 2P', cursive;
 }
 
 /* モンスターグリッドのスタイル */
@@ -430,12 +603,15 @@ p {
   left: 0;
   width: 250px;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
+  background: linear-gradient(to bottom, rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
+  color: #FFD700;
+  /* ゴールド */
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  font-family: 'Press Start 2P', cursive;
+  /* ゲームフォント */
 }
 
 .menu.open {
@@ -460,4 +636,28 @@ ul {
 
 li {
   margin: 20px 0;
+  transition: color 0.3s ease;
+}
+
+li:hover {
+  color: #32CD32;
+  /* ホバー時の色 */
+}
+
+li a {
+  text-decoration: none;
+  color: inherit;
+  /* リスト項目の色を継承 */
+  display: flex;
+  align-items: center;
+}
+
+li a:hover {
+  text-shadow: 1px 1px 5px rgba(0, 255, 0, 0.7);
+  /* ホバー時のテキストシャドウ */
+}
+
+/* アイコンのスタイル */
+.icon {
+  margin-right: 10px;
 }   

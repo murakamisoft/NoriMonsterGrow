@@ -4,17 +4,33 @@
 
 <mapper namespace="com.monstergrow.mapper.MonsterMapper">
 
+    <!-- モンスターのプロパティをマッピングする resultMap -->
     <resultMap id="MonsterResultMap" type="com.monstergrow.model.Monster">
-        <result property="monsterId" column="monster_id"/>
-        <result property="playerId" column="player_id"/>
-        <result property="monsterTypeId" column="monster_type_id"/>
-        <result property="monsterAttributeId" column="monster_attribute_id"/>
-        <result property="monsterImgId" column="monster_img_id"/>
-        <result property="monsterName" column="monster_name"/>
-        <result property="imgFileName" column="img_file_name"/>
-        <result property="createdBy" column="created_by"/>
-        <result property="updatedBy" column="updated_by"/>
-        <result property="updatedAt" column="updated_at"/>
+        <id property="monsterId" column="MONSTER_ID" />
+        <result property="playerId" column="PLAYER_ID" />
+        <result property="monsterTypeId" column="MONSTER_TYPE_ID" />
+        <result property="monsterAttributeId" column="MONSTER_ATTRIBUTE_ID" />
+        <result property="monsterImgId" column="MONSTER_IMG_ID" />
+        <result property="monsterName" column="MONSTER_NAME" />
+        <result property="imgFileName" column="IMG_FILE_NAME" />
+        <result property="lv" column="LV" />
+        <result property="experience" column="EXPERIENCE" />
+        <result property="hp" column="HP" />
+        <result property="mp" column="MP" />
+        <result property="hpMax" column="HP_MAX" />
+        <result property="mpMax" column="MP_MAX" />
+        <result property="attackPower" column="ATTACK_POWER" />
+        <result property="defensePower" column="DEFENSE_POWER" />
+        <result property="magicAttack" column="MAGIC_ATTACK" />
+        <result property="magicHealing" column="MAGIC_HEALING" />
+        <result property="strength" column="STRENGTH" />
+        <result property="defense" column="DEFENSE" />
+        <result property="agility" column="AGILITY" />
+        <result property="dexterity" column="DEXTERITY" />
+        <result property="createdBy" column="CREATED_BY" />
+        <result property="createdAt" column="CREATED_AT" />
+        <result property="updatedBy" column="UPDATED_BY" />
+        <result property="updatedAt" column="UPDATED_AT" />
     </resultMap>
 
     <select id="getAllMonsters" resultMap="MonsterResultMap">
@@ -29,22 +45,92 @@
         SELECT * FROM M_MONSTER WHERE PLAYER_ID = #{playerId}
     </select>
 
+    <!-- モンスターを追加する -->
     <insert id="insertMonster" parameterType="com.monstergrow.model.Monster">
-        INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, IMG_FILE_NAME, CREATED_BY, UPDATED_BY) 
-        VALUES (#{monsterId}, #{playerId}, #{monsterTypeId}, #{monsterAttributeId}, #{monsterImgId}, #{monsterName}, #{imgFileName}, #{createdBy}, #{updatedBy})
+        INSERT INTO M_MONSTER (
+            MONSTER_ID,
+            PLAYER_ID,
+            MONSTER_TYPE_ID,
+            MONSTER_ATTRIBUTE_ID,
+            MONSTER_IMG_ID,
+            MONSTER_NAME,
+            IMG_FILE_NAME,
+            LV,
+            EXPERIENCE,
+            HP,
+            MP,
+            HP_MAX,
+            MP_MAX,
+            ATTACK_POWER,
+            DEFENSE_POWER,
+            MAGIC_ATTACK,
+            MAGIC_HEALING,
+            STRENGTH,
+            DEFENSE,
+            AGILITY,
+            DEXTERITY,
+            CREATED_BY,
+            UPDATED_BY
+        ) VALUES (
+            #{monsterId},
+            #{playerId},
+            #{monsterTypeId},
+            #{monsterAttributeId},
+            #{monsterImgId},
+            #{monsterName},
+            #{imgFileName},
+            #{lv},
+            #{experience},
+            #{hp},
+            #{mp},
+            #{hpMax},
+            #{mpMax},
+            #{attackPower},
+            #{defensePower},
+            #{magicAttack},
+            #{magicHealing},
+            #{strength},
+            #{defense},
+            #{agility},
+            #{dexterity},
+            #{createdBy},
+            #{updatedBy}
+        )
     </insert>
 
+    <!-- モンスターを更新する -->
     <update id="updateMonster" parameterType="com.monstergrow.model.Monster">
-        UPDATE M_MONSTER 
-        SET PLAYER_ID = #{playerId}, MONSTER_TYPE_ID = #{monsterTypeId}, 
-            MONSTER_ATTRIBUTE_ID = #{monsterAttributeId}, MONSTER_IMG_ID = #{monsterImgId}, 
-            MONSTER_NAME = #{monsterName}, IMG_FILE_NAME = #{imgFileName}, 
-            UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP 
+        UPDATE M_MONSTER
+        SET
+            PLAYER_ID = #{playerId},
+            MONSTER_TYPE_ID = #{monsterTypeId},
+            MONSTER_ATTRIBUTE_ID = #{monsterAttributeId},
+            MONSTER_IMG_ID = #{monsterImgId},
+            MONSTER_NAME = #{monsterName},
+            IMG_FILE_NAME = #{imgFileName},
+            LV = #{lv},
+            EXPERIENCE = #{experience},
+            HP = #{hp},
+            MP = #{mp},
+            HP_MAX = #{hpMax},
+            MP_MAX = #{mpMax},
+            ATTACK_POWER = #{attackPower},
+            DEFENSE_POWER = #{defensePower},
+            MAGIC_ATTACK = #{magicAttack},
+            MAGIC_HEALING = #{magicHealing},
+            STRENGTH = #{strength},
+            DEFENSE = #{defense},
+            AGILITY = #{agility},
+            DEXTERITY = #{dexterity},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = CURRENT_TIMESTAMP
         WHERE MONSTER_ID = #{monsterId}
     </update>
 
-    <delete id="deleteMonster" parameterType="Long">
-        DELETE FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}
+    <!-- モンスターを削除する -->
+    <delete id="deleteMonster" parameterType="int">
+        DELETE FROM M_MONSTER
+        WHERE MONSTER_ID = #{monsterId}
     </delete>
 
 </mapper>

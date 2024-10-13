@@ -11,3 +11,133 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* 他のスタイルにゲームフォントを適用 */
+h1,
+h2,
+p {
+  font-family: 'Press Start 2P', cursive;
+  color: yellow;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  /* ボタンの内側の余白 */
+  font-size: 16px;
+  /* 文字の大きさ */
+  font-weight: bold;
+  /* 文字を太くする */
+  color: white;
+  /* 文字の色 */
+  background: linear-gradient(45deg, #ff6b6b, #f7b32b);
+  /* グラデーション */
+  border: none;
+  /* ボーダーなし */
+  border-radius: 10px;
+  /* 角を丸める */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* 影を追加 */
+  cursor: pointer;
+  /* カーソルをポインターにする */
+  transition: transform 0.2s ease, background 0.3s ease;
+  /* アニメーション効果 */
+}
+
+.button:hover {
+  transform: scale(1.05);
+  /* ホバー時に少し大きくする */
+  background: linear-gradient(45deg, #f7b32b, #ff6b6b);
+  /* ホバー時の色を反転 */
+}
+
+.button:active {
+  transform: scale(0.95);
+  /* クリック時に少し小さくする */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* クリック時の影を少なくする */
+}
+
+/* アイコンのスタイル（オプション） */
+.button .icon {
+  margin-right: 8px;
+  /* アイコンと文字の間隔 */
+  font-size: 20px;
+  /* アイコンのサイズ */
+}
+
+
+.title {
+  text-align: center;
+  color: yellow;
+  /* メニューと同じ色 */
+  font-size: 2rem;
+  /* フォントサイズを調整 */
+  margin: 20px 0;
+  /* 上下のマージンを追加 */
+}
+
+/* src/styles.css */
+.message-window {
+  padding: 20px;
+  width: 600px;
+  /* 幅を固定 */
+  border: 2px solid yellow;
+  /* 枠線を黄色に設定 */
+  background-color: rgba(255, 255, 255, 0.1);
+  /* 半透明の白背景 */
+  color: black;
+  /* 文字色は黒 */
+  text-align: left;
+  /* 中央揃え */
+  border-radius: 10px;
+  /* 角を丸くする */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  /* 影を追加 */
+}
+
+/* メッセージウィンドウを囲むラッパー */
+.message-container {
+  display: flex;
+  justify-content: center;
+  /* 横に対して中央揃え */
+  margin-top: 20px;
+  /* モンスターグリッドとの間隔 */
+}
+
+.monster-grid {
+  display: flex;
+  justify-content: space-around;
+  /* モンスターを等間隔に配置 */
+  align-items: center;
+  /* 縦方向のセンタリング */
+  width: 100%;
+  /* 必要に応じて全幅を設定 */
+  overflow-x: auto;
+  /* 横スクロールが可能 */
+  padding: 10px;
+  /* パディングを追加 */
+
+}
+
+.monster-grid p {
+  word-wrap: break-word;
+  /* 長い単語を折り返す */
+  overflow-wrap: break-word;
+  /* オーバーフローを防ぐ */
+  text-align: center;
+  /* 中央揃え */
+}
+
+.monster-item {
+  display: flex;
+  flex-direction: column;
+  /* 縦に要素を並べる */
+  align-items: center;
+  /* 中央揃え */
+  margin-right: 10px;
+  /* 各アイテムの右マージン */
+  width: 180px;
+}

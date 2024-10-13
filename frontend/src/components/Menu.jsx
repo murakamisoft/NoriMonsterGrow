@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Menu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCog, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faCog, faFistRaised } from '@fortawesome/free-solid-svg-icons';
 
 
 // Menu.jsx
@@ -14,7 +14,7 @@ const Menu = ({ isOpen, onClose }) => {
       <h2>Menu</h2>
       <ul>
         <li><Link to="/"><FontAwesomeIcon icon={faHome} className="icon" /> Home</Link></li>
-        <li><Link to="/monsters"><FontAwesomeIcon icon={faStar} className="icon" /> Monster</Link></li>
+        <li><Link to="/training"><FontAwesomeIcon icon={faFistRaised} className="icon" /> Training</Link></li>
         <li><Link to="/settings"><FontAwesomeIcon icon={faCog} className="icon" /> Setting</Link></li>
       </ul>
     </div>
