@@ -1,0 +1,65 @@
+/* src/components/Menu.css */
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
+  color: #FFD700;
+  /* ゴールド */
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  font-family: 'Press Start 2P', cursive;
+  /* ゲームフォント */
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 20px 0;
+  transition: color 0.3s ease;
+}
+
+li:hover {
+  color: #32CD32;
+  /* ホバー時の色 */
+}
+
+li a {
+  text-decoration: none;
+  color: inherit;
+  /* リスト項目の色を継承 */
+  display: flex;
+  align-items: center;
+}
+
+li a:hover {
+  text-shadow: 1px 1px 5px rgba(0, 255, 0, 0.7);
+  /* ホバー時のテキストシャドウ */
+}
+
+/* アイコンのスタイル */
+.icon {
+  margin-right: 10px;
+}
