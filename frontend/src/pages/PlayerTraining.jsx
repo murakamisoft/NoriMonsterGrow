@@ -24,12 +24,35 @@ const PlayerTraining = ({ playerId }) => {
     fetchMonsters();
   }, [playerId]);
 
-  const handleTraining = (monster1, monster2) => {
-    // 特訓ロジックをここに追加
-    console.log(`${monster1.monsterName} と ${monster2.monsterName} が特訓中...`);
+  const handleTraining = (selectedMonster) => {
+    // バトルロジックをここに追加
+    console.log(`${selectedMonster.monsterName} が特訓中...`);
 
-    // 特訓の結果メッセージを設定
-    const message = `${monster1.monsterName} と ${monster2.monsterName} が特訓を行い、経験値を獲得しました！`;
+    let totalExperienceGain = 0; // 総獲得経験値
+    const results = [];
+    const updatedMonsters = [...monsters]; // モンスターの状態を更新するための配列を作成
+
+    // 選択されたモンスターと他のモンスターでバトル
+    updatedMonsters.forEach((monster) => {
+      if (monster.monsterId !== selectedMonster.monsterId) {
+        // 簡易的なバトルロジック
+        const damage = Math.max(0, selectedMonster.attackPower - monster.defensePower); // ダメージ計算
+        const monsterExperienceGain = Math.floor(damage / 2); // 獲得経験値計算
+
+        // モンスターのHPを減少させる処理
+        monster.hp = Math.max(0, monster.hp - damage); // HPが負にならないようにする
+
+        // 結果を保存
+        results.push(`${selectedMonster.monsterName} が ${monster.monsterName} に ${damage} ダメージを与えた！`);
+        totalExperienceGain += monsterExperienceGain;
+      }
+    });
+
+    // モンスターの状態を更新
+    setMonsters(updatedMonsters);
+
+    // 結果メッセージを設定
+    const message = results.join('\n') + `\n${selectedMonster.monsterName} は ${totalExperienceGain} 経験値を獲得しました！`;
     setTrainingMessage(message);
   };
 
@@ -52,7 +75,8 @@ const PlayerTraining = ({ playerId }) => {
               <p>HP {monster.hp}</p>
               <p>MP {monster.mp}</p>
               <p>Lv {monster.lv}</p>
-              <button className="button" onClick={() => handleTraining(monsters[0], monster)}>START</button>
+              <p>経験値 {monster.experience}</p>
+              <button className="button" onClick={() => handleTraining(monster)}>START</button>
             </div>
           ))
         ) : (
@@ -62,7 +86,7 @@ const PlayerTraining = ({ playerId }) => {
       {trainingMessage && ( // メッセージウィンドウを表示
         <div className="message-container">
           <div className="message-window">
-            <p>{trainingMessage}</p>
+            <pre>{trainingMessage}</pre> {/* 結果を整形して表示 */}
           </div>
         </div>
       )}

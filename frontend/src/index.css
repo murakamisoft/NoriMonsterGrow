@@ -98,6 +98,13 @@ p {
   /* 影を追加 */
 }
 
+.message-window pre {
+  color: yellow;
+  /* テキストの色を黄色に設定 */
+  font-size: 16px;
+  /* フォントサイズを調整 */
+}
+
 /* メッセージウィンドウを囲むラッパー */
 .message-container {
   display: flex;
