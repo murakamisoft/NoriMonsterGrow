@@ -148,7 +148,7 @@ const Home = () => {
         setPlayer(playerResponse.data);
         console.log("playerResponse.data : " + JSON.stringify(playerResponse.data));
         // モンスター情報をAPIから取得
-        const monstersResponse = await axios.get(`http://localhost:8080/api/monsters?playerId=${playerResponse.data.id}`);
+        const monstersResponse = await axios.get(`http://localhost:8080/api/monsters/${playerResponse.data.playerId}/monsters`);
         setMonsters(monstersResponse.data);
         console.log("monstersResponse.data : " + JSON.stringify(monstersResponse.data));
       } catch (err) {
@@ -271,57 +271,98 @@ code {
 }
    
 ----- C:\Users\nori\workspace\NoriMonsterGrow\frontend\src\css\Home.css ----- 
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 /* 背景設定 */
 body {
   background-image: url('./img/background.jpg');
-  /* ファンタジーな背景画像 */
   background-size: cover;
   background-position: center;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Press Start 2P', cursive;
   color: white;
 }
 
-/* モンスターカードのデザイン */
+/* タイトルのスタイル */
+.game-title {
+  font-size: 2.5rem;
+  color: #FFD700;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* プレイヤー情報のスタイル */
+.player-info {
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  /* 明るい半透明背景に変更 */
+  border-radius: 15px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+  /* 明るい影 */
+  color: #FFD700;
+  /* ゴールドで統一 */
+  font-size: 1.1rem;
+  /* フォントサイズを大きくして目立たせる */
+}
+
+/* モンスターグリッドのスタイル */
+.monster-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* モンスターカードのスタイル */
 .monster-card {
-  background-color: rgba(0, 0, 0, 0.7);
-  /* 透明感のある背景 */
+  background-color: rgba(255, 255, 255, 0.2);
+  /* 明るい背景 */
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5);
+  /* 明るい影 */
   text-align: center;
-  margin: 10px;
+  width: 120px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .monster-card:hover {
-  transform: scale(1.05);
-  /* カードを少し拡大して強調 */
-  box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.7);
+  transform: scale(1.1);
+  box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.7);
+  /* ホバー時に明るい影を強調 */
 }
 
 /* モンスター画像のスタイル */
-.monster-card img {
-  border-radius: 5px;
+.monster-image {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 10px;
+  border-radius: 50%;
   transition: transform 0.3s ease;
 }
 
-.monster-card img:hover {
-  transform: rotate(10deg) scale(1.1);
-  /* ホバー時に軽い回転と拡大 */
+.monster-image:hover {
+  transform: rotate(10deg) scale(1.2);
 }
 
-/* フォントスタイル */
-h1,
-h2,
-p {
-  font-family: 'Press Start 2P', cursive;
-  /* レトロゲーム風のフォント */
-  color: #FFD700;
-  /* ゴールドのカラー */
+/* モンスター名のスタイル */
+.monster-name {
+  font-size: 1.1rem;
+  /* 文字を少し大きく */
+  color: #FFFF00;
+  /* より明るい黄色に変更 */
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  /* モンスター名にも影を追加 */
 }
 
 /* ボタンデザイン */
 .button {
-  background-color: #FF4500;
+  background-color: #32CD32;
+  /* 明るいグリーン */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -332,6 +373,5 @@ p {
 }
 
 .button:hover {
-  background-color: #FF6347;
-  /* ホバー時に色を変える */
+  background-color: #3CB371;
 }   

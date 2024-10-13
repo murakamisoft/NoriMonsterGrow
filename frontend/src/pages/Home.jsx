@@ -16,7 +16,7 @@ const Home = () => {
         setPlayer(playerResponse.data);
         console.log("playerResponse.data : " + JSON.stringify(playerResponse.data));
         // モンスター情報をAPIから取得
-        const monstersResponse = await axios.get(`http://localhost:8080/api/monsters?playerId=${playerResponse.data.id}`);
+        const monstersResponse = await axios.get(`http://localhost:8080/api/monsters/${playerResponse.data.playerId}/monsters`);
         setMonsters(monstersResponse.data);
         console.log("monstersResponse.data : " + JSON.stringify(monstersResponse.data));
       } catch (err) {
@@ -35,15 +35,15 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="background-overlay"></div> {/* 背景オーバーレイ */}
-      <h1 className="game-title">モンスター育成ゲーム</h1>
+      <h1 className="game-title">Nori Monster Grow</h1>
       {player && (
         <div className="player-info">
-          <h2>プレイヤー情報</h2>
-          <p>名前: {player.playerName}</p>
-          <p>レベル: {player.lv}</p>
-          <p>経験値: {player.experience}</p>
+          <h2>Player</h2>
+          <p>{player.playerName}</p>
+          <p>Lv: {player.lv}</p>
+          <p>Ex: {player.experience}</p>
 
-          <h2>所持モンスター</h2>
+          <h2>Monster</h2>
           <div className="monster-grid">
             {monsters && monsters.length > 0 ? (
               monsters.map((monster) => (
