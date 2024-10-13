@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../css/Home.css'; // カスタムスタイルを読み込み
 
 const Home = () => {
   const [player, setPlayer] = useState(null);
@@ -32,26 +33,27 @@ const Home = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>ホーム画面</h1>
+    <div className="home-container">
+      <div className="background-overlay"></div> {/* 背景オーバーレイ */}
+      <h1 className="game-title">モンスター育成ゲーム</h1>
       {player && (
-        <div>
+        <div className="player-info">
           <h2>プレイヤー情報</h2>
           <p>名前: {player.playerName}</p>
           <p>レベル: {player.lv}</p>
           <p>経験値: {player.experience}</p>
 
           <h2>所持モンスター</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <div className="monster-grid">
             {monsters && monsters.length > 0 ? (
               monsters.map((monster) => (
-                <div key={monster.monsterId} style={{ margin: '10px' }}>
+                <div key={monster.monsterId} className="monster-card">
                   <img
                     src={`/img/monster/${monster.imgFileName}`} // モンスターの画像のパスを設定
                     alt={monster.monsterName}
-                    style={{ width: '64px', height: '64px' }} // 画像サイズを設定
+                    className="monster-image" // カスタムクラスを追加
                   />
-                  <p>{monster.monsterName}</p>
+                  <p className="monster-name">{monster.monsterName} Lv{monster.lv}</p>
                 </div>
               ))
             ) : (
