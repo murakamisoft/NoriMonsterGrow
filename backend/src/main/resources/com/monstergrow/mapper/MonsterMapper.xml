@@ -11,6 +11,7 @@
         <result property="monsterAttributeId" column="monster_attribute_id"/>
         <result property="monsterImgId" column="monster_img_id"/>
         <result property="monsterName" column="monster_name"/>
+        <result property="imgFileName" column="img_file_name"/>
         <result property="createdBy" column="created_by"/>
         <result property="updatedBy" column="updated_by"/>
         <result property="updatedAt" column="updated_at"/>
@@ -20,29 +21,29 @@
         SELECT * FROM M_MONSTER
     </select>
 
-    <select id="getMonsterById" parameterType="Long" resultMap="MonsterResultMap">
+    <select id="getMonsterById" parameterType="com.monstergrow.model.Monster" resultMap="MonsterResultMap">
         SELECT * FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}
     </select>
 
-    <select id="getMonstersByPlayerId" parameterType="Long" resultMap="MonsterResultMap">
+    <select id="getMonstersByPlayerId" parameterType="com.monstergrow.model.Monster" resultMap="MonsterResultMap">
         SELECT * FROM M_MONSTER WHERE PLAYER_ID = #{playerId}
     </select>
 
     <insert id="insertMonster" parameterType="com.monstergrow.model.Monster">
-        INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, CREATED_BY, UPDATED_BY) 
-        VALUES (#{monsterId}, #{playerId}, #{monsterTypeId}, #{monsterAttributeId}, #{monsterImgId}, #{monsterName}, #{createdBy}, #{updatedBy})
+        INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, IMG_FILE_NAME, CREATED_BY, UPDATED_BY) 
+        VALUES (#{monsterId}, #{playerId}, #{monsterTypeId}, #{monsterAttributeId}, #{monsterImgId}, #{monsterName}, #{imgFileName}, #{createdBy}, #{updatedBy})
     </insert>
 
     <update id="updateMonster" parameterType="com.monstergrow.model.Monster">
         UPDATE M_MONSTER 
         SET PLAYER_ID = #{playerId}, MONSTER_TYPE_ID = #{monsterTypeId}, 
             MONSTER_ATTRIBUTE_ID = #{monsterAttributeId}, MONSTER_IMG_ID = #{monsterImgId}, 
-            MONSTER_NAME = #{monsterName}, UPDATED_BY = #{updatedBy}, 
-            UPDATED_AT = CURRENT_TIMESTAMP 
+            MONSTER_NAME = #{monsterName}, IMG_FILE_NAME = #{imgFileName}, 
+            UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP 
         WHERE MONSTER_ID = #{monsterId}
     </update>
 
-    <delete id="deleteMonster">
+    <delete id="deleteMonster" parameterType="Long">
         DELETE FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}
     </delete>
 

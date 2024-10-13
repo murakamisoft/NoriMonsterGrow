@@ -16,6 +16,7 @@ public class Monster {
   private Long monsterImgId;
   private String monsterName;
   private Integer lv;
+  private String imgFileName;
   private String createdBy;
   private LocalDateTime createdAt;
   private String updatedBy;

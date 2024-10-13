@@ -15,14 +15,20 @@
 ```
 -- モンスターイメージマスタに256匹のモンスター画像を挿入
 BEGIN
-    FOR x IN 0..15 LOOP
-        FOR y IN 0..15 LOOP
+    FOR x IN 0..4 LOOP
+        FOR y IN 0..4 LOOP
             INSERT INTO M_MONSTER_IMG (MONSTER_IMG_ID, IMG_FILE_NAME, PIXEL_X, PIXEL_Y, CREATED_BY)
-            VALUES ((x * 16 + y + 1), 'monster.png', x * 64, y * 64, 'nori');
+            VALUES ((x * 16 + y + 1), 'm' || (x * 16 + y + 1) || '.png', 0, 0, 'nori');
         END LOOP;
     END LOOP;
 END;
 /
 
 commit;
+```
+
+### sqlplus接続
+
+```
+sqlplus oracle_user/pass@//localhost:1521/XEPDB1
 ```
