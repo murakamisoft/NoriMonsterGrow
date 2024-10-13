@@ -14,6 +14,27 @@ public class NoriMonsterGrowApplication {
 
 }
    
+----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\config\WebConfig.java ----- 
+package com.monstergrow.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+  @Override
+  @SuppressWarnings("null")
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**") // すべてのエンドポイントにCORSを許可
+        .allowedOrigins("http://localhost:3000") // フロントエンドのURLを指定
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 許可するHTTPメソッド
+        .allowedHeaders("*") // 許可するヘッダー
+        .allowCredentials(true); // 認証情報を許可
+  }
+}
+   
 ----- C:\workspace\NoriMonsterGrow\backend\src\main\java\com\monstergrow\controller\MonsterController.java ----- 
 package com.monstergrow.controller;
 
@@ -163,28 +184,20 @@ public interface MonsterBattleMapper {
 package com.monstergrow.mapper;
 
 import com.monstergrow.model.MonsterImg;
-import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
-@Mapper
 public interface MonsterImgMapper {
 
-  @Select("SELECT * FROM M_MONSTER_IMG")
   List<MonsterImg> getAllMonsterImages();
 
-  @Select("SELECT * FROM M_MONSTER_IMG WHERE MONSTER_IMG_ID = #{monsterImgId}")
   MonsterImg getMonsterImageById(Long monsterImgId);
 
-  @Insert("INSERT INTO M_MONSTER_IMG (MONSTER_IMG_ID, IMG_FILE_NAME, PIXEL_X, PIXEL_Y, CREATED_BY, UPDATED_BY) " +
-      "VALUES (#{monsterImgId}, #{imgFileName}, #{pixelX}, #{pixelY}, #{createdBy}, #{updatedBy})")
+  List<MonsterImg> getMonsterImageByPlayerId(Long playerId);
+
   void insertMonsterImage(MonsterImg monsterImg);
 
-  @Update("UPDATE M_MONSTER_IMG SET IMG_FILE_NAME = #{imgFileName}, PIXEL_X = #{pixelX}, PIXEL_Y = #{pixelY}, " +
-      "UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE MONSTER_IMG_ID = #{monsterImgId}")
   void updateMonsterImage(MonsterImg monsterImg);
 
-  @Delete("DELETE FROM M_MONSTER_IMG WHERE MONSTER_IMG_ID = #{monsterImgId}")
   void deleteMonsterImage(Long monsterImgId);
 }
    
@@ -192,33 +205,23 @@ public interface MonsterImgMapper {
 package com.monstergrow.mapper;
 
 import com.monstergrow.model.Monster;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface MonsterMapper {
 
-  @Select("SELECT * FROM M_MONSTER")
   List<Monster> getAllMonsters();
 
-  @Select("SELECT * FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}")
   Monster getMonsterById(Long monsterId);
 
-  @Select("SELECT * FROM M_MONSTER WHERE PLAYER_ID = #{playerId}")
   List<Monster> getMonstersByPlayerId(Long playerId);
 
-  @Insert("INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, CREATED_BY, UPDATED_BY) "
-      +
-      "VALUES (#{monsterId}, #{playerId}, #{monsterTypeId}, #{monsterAttributeId}, #{monsterImgId}, #{monsterName}, #{createdBy}, #{updatedBy})")
   void insertMonster(Monster monster);
 
-  @Update("UPDATE M_MONSTER SET PLAYER_ID = #{playerId}, MONSTER_TYPE_ID = #{monsterTypeId}, " +
-      "MONSTER_ATTRIBUTE_ID = #{monsterAttributeId}, MONSTER_IMG_ID = #{monsterImgId}, " +
-      "MONSTER_NAME = #{monsterName}, UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE MONSTER_ID = #{monsterId}")
   void updateMonster(Monster monster);
 
-  @Delete("DELETE FROM M_MONSTER WHERE MONSTER_ID = #{monsterId}")
   void deleteMonster(Long monsterId);
 }
    
@@ -226,28 +229,20 @@ public interface MonsterMapper {
 package com.monstergrow.mapper;
 
 import com.monstergrow.model.Player;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface PlayerMapper {
-
-  @Select("SELECT * FROM M_PLAYER")
   List<Player> getAllPlayers();
 
-  @Select("SELECT * FROM M_PLAYER WHERE PLAYER_ID = #{playerId}")
   Player getPlayerById(Long playerId);
 
-  @Insert("INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY, UPDATED_BY) " +
-      "VALUES (#{playerId}, #{playerName}, #{lv}, #{experience}, #{createdBy}, #{updatedBy})")
   void insertPlayer(Player player);
 
-  @Update("UPDATE M_PLAYER SET PLAYER_NAME = #{playerName}, LV = #{lv}, EXPERIENCE = #{experience}, " +
-      "UPDATED_BY = #{updatedBy}, UPDATED_AT = CURRENT_TIMESTAMP WHERE PLAYER_ID = #{playerId}")
   void updatePlayer(Player player);
 
-  @Delete("DELETE FROM M_PLAYER WHERE PLAYER_ID = #{playerId}")
   void deletePlayer(Long playerId);
 }
    
@@ -355,13 +350,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Id;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Player {
-  @Id
   private Long playerId;
   private String playerName;
   private Integer lv;
@@ -418,6 +410,10 @@ public class MonsterImageRepository {
 
   public MonsterImg findById(Long monsterImageId) {
     return monsterImageMapper.getMonsterImageById(monsterImageId);
+  }
+
+  public List<MonsterImg> findByPlayerId(Long playerId) {
+    return monsterImageMapper.getMonsterImageByPlayerId(playerId);
   }
 
   public List<MonsterImg> findAll() {
@@ -858,10 +854,10 @@ INSERT INTO M_MONSTER_TYPE (MONSTER_TYPE_ID, MONSTER_TYPE_NAME, CREATED_BY) VALU
 INSERT INTO M_MONSTER_TYPE (MONSTER_TYPE_ID, MONSTER_TYPE_NAME, CREATED_BY) VALUES (4, 'アンデッド', 'nori');
 
 -- プレイヤーマスタへのデータ挿入
-INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (1, 'プレイヤー1', 1, 0, 'nori');
-INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (2, 'プレイヤー2', 1, 0, 'nori');
-INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (3, 'プレイヤー3', 1, 0, 'nori');
-INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (4, 'プレイヤー4', 1, 0, 'nori');
+INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (1, 'のり', 1, 0, 'nori');
+INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (2, 'ひろき', 1, 0, 'nori');
+INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (3, 'さき', 1, 0, 'nori');
+INSERT INTO M_PLAYER (PLAYER_ID, PLAYER_NAME, LV, EXPERIENCE, CREATED_BY) VALUES (4, 'まさみ', 1, 0, 'nori');
 
 -- モンスターマスタにデータを挿入
 INSERT INTO M_MONSTER (MONSTER_ID, PLAYER_ID, MONSTER_TYPE_ID, MONSTER_ATTRIBUTE_ID, MONSTER_IMG_ID, MONSTER_NAME, LV, CREATED_BY)
@@ -1135,4 +1131,5 @@ insert into ORACLE_USER.M_MONSTER_IMG(MONSTER_IMG_ID,IMG_FILE_NAME,PIXEL_X,PIXEL
 insert into ORACLE_USER.M_MONSTER_IMG(MONSTER_IMG_ID,IMG_FILE_NAME,PIXEL_X,PIXEL_Y,CREATED_BY,CREATED_AT,UPDATED_BY,UPDATED_AT) values (255,'monster.png',960,896,'nori',TIMESTAMP '2024-10-12 17:05:17.859',null,TIMESTAMP '2024-10-12 17:05:17.859');
 insert into ORACLE_USER.M_MONSTER_IMG(MONSTER_IMG_ID,IMG_FILE_NAME,PIXEL_X,PIXEL_Y,CREATED_BY,CREATED_AT,UPDATED_BY,UPDATED_AT) values (256,'monster.png',960,960,'nori',TIMESTAMP '2024-10-12 17:05:17.859',null,TIMESTAMP '2024-10-12 17:05:17.859');
 
+commit;
    

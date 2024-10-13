@@ -1,25 +1,59 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Link をインポート
 import '../css/Home.css'; // スタイルを追加する場合に備えて
 
 const Home = () => {
-  const player = {
-    name: 'プレイヤー名',
-    level: 5,
-    experience: 1200,
-  };
+  const [player, setPlayer] = useState(null);
+  const [monsters, setMonsters] = useState([]);
 
-  const monsters = [
-    { name: 'モンスターA', level: 3, hp: 50 },
-    { name: 'モンスターB', level: 4, hp: 40 },
-  ];
+  const playerId = 1; // プレイヤーID（適宜変更してください）
+
+  useEffect(() => {
+    const fetchPlayerData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/players/${playerId}`);
+        if (!response.ok) {
+          const errorMessage = await response.text(); // エラーメッセージを取得
+          console.error('Error:', errorMessage); // エラーメッセージをコンソールに表示
+          throw new Error('ネットワークエラー');
+        }
+        const data = await response.json();
+        console.log("fetchPlayerData : " + JSON.stringify(data));
+        setPlayer(data);
+      } catch (error) {
+        console.error('Fetch player data failed:', error);
+      }
+    };
+
+
+    const fetchMonstersData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/monsters?playerId=${playerId}`);
+        if (!response.ok) {
+          throw new Error('ネットワークエラー');
+        }
+        const data = await response.json();
+        console.log("fetchMonstersData : " + JSON.stringify(data));
+        setMonsters(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPlayerData();
+    fetchMonstersData();
+  }, [playerId]);
+
+  if (!player) {
+    return <div>ローディング中...</div>; // プレイヤーデータが取得できるまでのローディング表示
+  }
 
   return (
     <div className="container">
       <header className="py-4 text-center">
         <h1>NoriMonsterGrow</h1>
-        <h2>{player.name}</h2>
-        <p>レベル: {player.level}</p>
+        <h2>{player.playerName}</h2>
+        <p>レベル: {player.lv}</p>
         <div className="progress" style={{ height: '20px' }}>
           <div
             className="progress-bar"

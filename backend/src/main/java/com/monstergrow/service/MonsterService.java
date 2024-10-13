@@ -23,6 +23,10 @@ public class MonsterService {
     return monsterRepository.findById(monsterId);
   }
 
+  public List<Monster> getMonsterByPlayerId(Long playerId) {
+    return monsterRepository.findByPlayerId(playerId);
+  }
+
   public Monster createMonster(Monster monster) {
     monsterRepository.save(monster);
     return monster;

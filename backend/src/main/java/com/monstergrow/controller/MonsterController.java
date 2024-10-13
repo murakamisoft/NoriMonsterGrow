@@ -35,6 +35,13 @@ public class MonsterController {
     return ResponseEntity.ok(monster);
   }
 
+  // 指定したプレイヤーのモンスター一覧の情報を取得する
+  @GetMapping("/{playerId}/monsters")
+  public ResponseEntity<List<Monster>> getMonstersByPlayerId(@PathVariable Long playerId) {
+    List<Monster> monsters = monsterService.getMonsterByPlayerId(playerId);
+    return ResponseEntity.ok(monsters);
+  }
+
   // 新しいモンスターを作成する
   @PostMapping
   public ResponseEntity<Monster> createMonster(@RequestBody Monster monster) {
