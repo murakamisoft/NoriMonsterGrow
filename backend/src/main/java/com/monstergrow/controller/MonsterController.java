@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import com.monstergrow.model.Monster;
 import com.monstergrow.service.MonsterService;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/monsters")
@@ -52,6 +53,7 @@ public class MonsterController {
   // 指定したモンスターの情報を更新する
   @PutMapping("/{monsterId}")
   public ResponseEntity<Monster> updateMonster(@PathVariable Long monsterId, @RequestBody Monster monsterDetails) {
+    monsterDetails.setUpdatedAt(LocalDateTime.now());
     Monster updatedMonster = monsterService.updateMonster(monsterId, monsterDetails);
     return ResponseEntity.ok(updatedMonster);
   }
